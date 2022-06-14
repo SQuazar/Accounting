@@ -1,0 +1,27 @@
+#loadingBackground {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+}
+
+.err-block {
+    font-weight: bold;
+    color: white;
+    display: none;
+    background-color: red;
+    width: 30%;
+    font-size: 18px;
+    padding: 5px;
+    position: fixed;
+    top: 45px;
+    left: 0;
+    right: 0;
+    z-index: 999999999;
+    box-shadow: 0 0 12px 1px rgb(255, 255, 255);
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}

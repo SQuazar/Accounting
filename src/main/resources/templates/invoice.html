@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Накладные</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/invoice/invoice.js"></script>
+    <script src="js/util.js"></script>
+</head>
+<body onload="Controller.init()">
+<div>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">Учёт</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Склад</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Накладные</a>
+                        </li>
+                        <li th:if="${#lists.contains(roles, 'ROLE_ADMIN')}" class="nav-item">
+                            <a class="nav-link" href="/admin/users">Пользователи</a>
+                        </li>
+                        <li th:if="${#lists.contains(roles, 'ROLE_ADMIN')}" class="nav-item">
+                            <a class="nav-link" href="/admin/registration">Регистрация пользователей</a>
+                        </li>
+                    </ul>
+                    <form action="/logout">
+                        <button class="btn btn-outline-secondary my-2">Выйти из аккаунта</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div id="content">
+        <div id="errBlock" class="container text-center err-block mt-4">
+
+        </div>
+        <div id="loadingBackground" style="display: none"></div>
+        <div class="container-fluid mt-4">
+            <div class="container bg-light rounded shadow">
+                <div class="container p-3 text-center">
+                    <div class="d-inline">
+                        <table class="table d-inline table-borderless p-3">
+                            <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">Добавление накладной</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <select class="form-select" id="productIdSelection" onchange="onchange(); function onchange() {
+                                    const productId = $('#productIdSelection').val();
+                                    const remainderElement = $('#productRemainder');
+                                    remainderElement.removeAttr('hidden');
+                                    remainderElement.text(`Остаток: ${Controller.products[productId]['count']}`);
+                                }">
+                                            <option disabled selected value="none">Выберите товар</option>
+                                        </select>
+                                        <label id="productRemainder" hidden>test</label>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <input class="form-control" placeholder="Количество" id="productCount">
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <input class="form-control" placeholder="Физ. лицо" id="invoicePerson">
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <select class="form-select" id="invoiceTypeSelect">
+                                            <option disabled selected value="none">Тип накладной</option>
+                                            <option value="billing">Выдача</option>
+                                            <option value="refund">Возврат</option>
+                                        </select>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <input type="datetime-local" class="form-control" id="invoiceDate">
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="form-control" onclick="Controller.createInvoice()">Сохранить</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-inline">
+                        <table class="table d-inline table-borderless p-3">
+                            <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">Удаление накладной</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <input class="form-control text-center" placeholder="ID" id="deleteInvoiceId">
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="form-control btn-dark" onclick="Controller.deleteInvoice()">Удалить
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th class="table-dark">Пробить накладные по дате</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <input class="form-control" type="date" id="invoiceDateId">
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="form-control btn-dark" onclick="Controller.getInvoices()">Пробить
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-inline">
+                        <table class="table d-inline table-borderless p-3">
+                            <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">Сортировать таблицу</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label>
+                                        <select class="w-100 form-control form-select" id="invoiceSortSelect">
+                                            <option disabled selected value="none">Выберите способ сортировки</option>
+                                            <option value="id">ID</option>
+                                            <option value="invoice_type">Тип накладной</option>
+                                            <option value="count">Количество продукта</option>
+                                            <option value="person">Физ. лицо</option>
+                                            <option value="date">Дата</option>
+                                        </select>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" id="inverseSort" class="form-check">
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>Inverse</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="form-control" onclick="Controller.getInvoices()">Сортировать</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productLabelModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Информация о продукте</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>ID: <label style="cursor: text" id="modalProductId"></label></h5>
+                            <h5>Наименование: <label style="cursor: text" id="modalProductName"></label></h5>
+                            <h5>Количество: <label style="cursor: text" id="modalProductCount"></label></h5>
+                            <h5>Стоимость: <label style="cursor: text" id="modalProductPrice"></label></h5>
+                            <h5>Дата поставки: <label style="cursor: text" id="modalProductDate"></label></h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid mt-3">
+                <h3 class="text-center pt-2">Накладные</h3>
+                <div class="container mt-4">
+                    <table class="table table-hover table-bordered table-borderless">
+                        <thead class="table-dark">
+                        <tr class="text-center">
+                            <th scope="col">ID</th>
+                            <th scope="col">Продукт</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Тип накладной</th>
+                            <th scope="col">Физ. лицо</th>
+                            <th scope="col">Дата оформления накладной</th>
+                        </tr>
+                        </thead>
+                        <tbody id="invoicesTableBody" class="text-center">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
