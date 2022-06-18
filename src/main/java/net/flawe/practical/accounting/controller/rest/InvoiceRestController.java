@@ -108,7 +108,7 @@ public class InvoiceRestController {
                 .toList();
     }
 
-    @PostMapping("/add") @Transactional
+    @PostMapping("/add")
     public ResponseEntity<List<InvoiceDto>> add(@RequestBody InvoiceDto invoiceDto) {
         return ResponseEntity.ok(List.of(invoiceMapper.mapToDto(invoiceService.save(invoiceMapper.mapFromDto(invoiceDto)))));
     }
