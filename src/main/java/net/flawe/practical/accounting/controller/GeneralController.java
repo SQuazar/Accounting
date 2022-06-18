@@ -36,4 +36,9 @@ public class GeneralController {
         return "/invoice";
     }
 
+    @GetMapping("/products")
+    public String products() {
+        return "/products";
+    }
+
 }

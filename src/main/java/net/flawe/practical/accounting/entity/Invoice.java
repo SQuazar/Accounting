@@ -1,6 +1,7 @@
 package net.flawe.practical.accounting.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,17 +21,21 @@ public class Invoice {
     @Column(nullable = false)
     private Integer id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
-    private Stock product;
+    private Product product;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private InvoiceType invoiceType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InvoiceDirection invoiceDirection;
+
     @Column(nullable = false)
     @Builder.Default
-    private int count = 1;
+    private Integer count = 1;
 
     @Column(nullable = false)
     private String person;
@@ -38,8 +43,4 @@ public class Invoice {
     @Column(nullable = false)
     @Builder.Default
     private LocalDateTime date = LocalDateTime.now();
-
-    public void setStock(Stock product) {
-        this.product = product;
-    }
 }

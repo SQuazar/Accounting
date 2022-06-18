@@ -4,50 +4,18 @@
     <meta charset="UTF-8">
     <title>Накладные</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
+    <link href="css/style.css" rel="stylesheet">
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/invoice/invoice.js"></script>
     <script src="js/util.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body onload="Controller.init()">
 <div>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">Учёт</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Склад</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Накладные</a>
-                        </li>
-                        <li th:if="${#lists.contains(roles, 'ROLE_ADMIN')}" class="nav-item">
-                            <a class="nav-link" href="/admin/users">Пользователи</a>
-                        </li>
-                        <li th:if="${#lists.contains(roles, 'ROLE_ADMIN')}" class="nav-item">
-                            <a class="nav-link" href="/admin/registration">Регистрация пользователей</a>
-                        </li>
-                    </ul>
-                    <form action="/logout">
-                        <button class="btn btn-outline-secondary my-2">Выйти из аккаунта</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <header th:insert="fragments/navbar.html :: navbar"></header>
     <div id="content">
-        <div id="errBlock" class="container text-center err-block mt-4">
-
-        </div>
-        <div id="loadingBackground" style="display: none"></div>
+        <div th:insert="fragments/blocks.html :: util"></div>
         <div class="container-fluid mt-4">
             <div class="container bg-light rounded shadow">
                 <div class="container p-3 text-center">
@@ -55,7 +23,7 @@
                         <table class="table d-inline table-borderless p-3">
                             <thead class="table-dark">
                             <tr>
-                                <th class="text-center">Добавление накладной</th>
+                                <th class="text-center">Добавление новой накладной</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -76,7 +44,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label class="w-100">
+                                    <label style="width: 400px">
                                         <input class="form-control" placeholder="Количество" id="productCount">
                                     </label>
                                 </td>
@@ -84,7 +52,7 @@
                             <tr>
                                 <td>
                                     <label class="w-100">
-                                        <input class="form-control" placeholder="Физ. лицо" id="invoicePerson">
+                                        <input class="form-control" placeholder="Ответственное лицо" id="invoicePerson">
                                     </label>
                                 </td>
                             </tr>
@@ -95,6 +63,17 @@
                                             <option disabled selected value="none">Тип накладной</option>
                                             <option value="billing">Выдача</option>
                                             <option value="refund">Возврат</option>
+                                        </select>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="w-100">
+                                        <select class="form-select" id="invoiceDirectionSelect">
+                                            <option disabled selected value="note">Направление</option>
+                                            <option value="realization">Реализация</option>
+                                            <option value="selling">Продажа</option>
                                         </select>
                                     </label>
                                 </td>
@@ -143,48 +122,23 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label class="w-100">
-                                        <input class="form-control" type="date" id="invoiceDateId">
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="form-control btn-dark" onclick="Controller.getInvoices()">Пробить
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-inline">
-                        <table class="table d-inline table-borderless p-3">
-                            <thead class="table-dark">
-                            <tr>
-                                <th class="text-center">Сортировать таблицу</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>
                                     <label>
                                         <select class="w-100 form-control form-select" id="invoiceSortSelect">
                                             <option disabled selected value="none">Выберите способ сортировки</option>
                                             <option value="id">ID</option>
                                             <option value="invoice_type">Тип накладной</option>
+                                            <option value="invoice_direction">Направление</option>
                                             <option value="count">Количество продукта</option>
-                                            <option value="person">Физ. лицо</option>
+                                            <option value="person">Ответственное лицо</option>
                                             <option value="date">Дата</option>
                                         </select>
                                     </label>
                                 </td>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" id="inverseSort" class="form-check">
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>Inverse</label>
+                            </tr>
+                            <tr>
+                                <td class="text-start">
+                                    <input type="checkbox" id="inverseSort" class="form-check-input">
+                                    <label for="inverseSort" class="form-label">Inverse</label>
                                 </td>
                             </tr>
                             <tr>
@@ -196,8 +150,104 @@
                         </table>
                     </div>
                 </div>
+                <div class="container p-3 text-center w-100">
+                    <table class="table d-inline table-borderless">
+                        <thead class="table-dark">
+                        <tr class="text-center">
+                            <th>Ответственное лицо</th>
+                            <th>Количество товара</th>
+                            <th>Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label style="width: 300px">
+                                    <input class="form-control" placeholder="Ответственное лицо"
+                                           id="invoiceSearchPerson">
+                                </label>
+                            </td>
+                            <td>
+                                <label style="width: 300px">
+                                    <input class="form-control" placeholder="Мин. количество"
+                                           id="invoiceSearchMinCount">
+                                </label>
+                            </td>
+                            <td>
+                                <label style="width: 300px">
+                                    <input class="form-control" type="datetime-local" placeholder="Мин. дата"
+                                           id="invoiceSearchMinDate">
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start pt-0 ps-2">
+                                <div>
+                                    <input class="form-check-input" type="checkbox"
+                                           id="personSearchNameIgnoreCase">
+                                    <label for="personSearchNameIgnoreCase">Игнорировать регистр</label>
+                                </div>
+                                <div>
+                                    <input class="form-check-input" type="checkbox"
+                                           id="personNameSearchStartsWith">
+                                    <label for="personNameSearchStartsWith">Начинается с...</label>
+                                </div>
+                            </td>
+                            <td>
+                                <label style="width: 300px">
+                                    <input class="form-control" placeholder="Макс. количество"
+                                           id="invoiceSearchMaxCount">
+                                </label>
+                            </td>
+                            <td>
+                                <label style="width: 300px">
+                                    <input class="form-control" type="datetime-local" placeholder="Макс. дата"
+                                           id="invoiceSearchMaxDate">
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label class="w-100">
+                                    <select class="form-select" id="invoiceProductSearchSelect">
+                                        <option selected value="none">Продукт</option>
+                                    </select>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label class="w-100">
+                                    <select class="form-select" id="invoiceTypeSearch">
+                                        <option selected value="none">Тип накладной</option>
+                                        <option value="billing">Выдача</option>
+                                        <option value="refund">Возврат</option>
+                                    </select>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <label class="w-100">
+                                    <select class="form-select" id="invoiceDirectionSearch">
+                                        <option selected value="none">Направление</option>
+                                        <option value="realization">Реализация</option>
+                                        <option value="selling">Продажа</option>
+                                    </select>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <button class="form-control" onclick="Controller.getInvoices()">Поиск</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productLabelModal" aria-hidden="true">
+            <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productLabelModal"
+                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -210,6 +260,7 @@
                             <h5>Количество: <label style="cursor: text" id="modalProductCount"></label></h5>
                             <h5>Стоимость: <label style="cursor: text" id="modalProductPrice"></label></h5>
                             <h5>Дата поставки: <label style="cursor: text" id="modalProductDate"></label></h5>
+                            <h5>Склад: <label style="cursor: text" id="modalProductStock"></label></h5>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -219,15 +270,23 @@
             </div>
             <div class="container-fluid mt-3">
                 <h3 class="text-center pt-2">Накладные</h3>
-                <div class="container mt-4">
+                <div class="text-center">
+                    <button class="text-center btn btn-dark" style="width: 10%" onclick="Controller.deleteSelectedInvoices()">Удалить выбранные</button>
+                    <button class="text-center btn btn-dark" style="width: 10%" onclick="Controller.resetSearchFields();Controller.init()">Обновить</button>
+                </div>
+                <div class="container mt-2">
                     <table class="table table-hover table-bordered table-borderless">
                         <thead class="table-dark">
                         <tr class="text-center">
+                            <th class="text-center">
+                                <label><input class="form-check-input" type="checkbox" id="selectBoxAll" onclick="Controller.selectAll()"></label>
+                            </th>
                             <th scope="col">ID</th>
                             <th scope="col">Продукт</th>
                             <th scope="col">Количество</th>
                             <th scope="col">Тип накладной</th>
-                            <th scope="col">Физ. лицо</th>
+                            <th scope="col">Направление</th>
+                            <th scope="col">Ответственное лицо</th>
                             <th scope="col">Дата оформления накладной</th>
                         </tr>
                         </thead>
@@ -239,5 +298,6 @@
         </div>
     </div>
 </div>
+<footer th:insert="/fragments/blocks.html :: footer"></footer>
 </body>
 </html>

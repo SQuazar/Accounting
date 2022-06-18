@@ -1,73 +1,27 @@
 const Controller = {
-
     init: function () {
-        this.getProducts();
+        this.getStocks();
     },
 
-    getProducts: function () {
-        let minDate = $('#productSearchMinDate').val();
-        if (minDate === '')
-            minDate = undefined;
-        let maxDate = $('#productSearchMaxDate').val();
-        if (maxDate === '')
-            maxDate = undefined;
-        const productName = $('#productSearchName').val();
-        const nameIgnoreCase = $('#productSearchNameIgnoreCase').is(':checked');
-        const nameStartsWith = $('#productNameSearchStartsWith').is(':checked')
-        const minCount = $('#productSearchMinCount').val();
-        const maxCount = $('#productSearchMaxCount').val();
-        const minPrice = $('#productSearchMinPrice').val();
-        const maxPrice = $('#productSearchMaxPrice').val();
-        let sortType = $('#productSortSelect').val();
-        if (typeof sortType != 'string')
-            sortType = 'none';
-        const sortInverse = $('#inverseSort').is(':checked');
-        $.ajax({
-            type: 'POST',
-            url: `/api/stock/all?sort=${sortType}&inverse=${sortInverse}&${minDate === undefined ? '' : `min_date=${new Date(minDate).getTime()}&`}${maxDate === undefined ? '' : `max_date=${new Date(maxDate).getTime()}&`}${productName === '' ? '' : `name=${productName}&`}name_ignore_case=${nameIgnoreCase}&name_starts_with=${nameStartsWith}&${minCount === '' ? '' : `min_count=${minCount}&`}${maxCount === '' ? '' : `max_count=${maxCount}&`}${minPrice === '' ? '' : `min_price=${minPrice}&`}${maxPrice === '' ? '' : `max_price=${maxPrice}`}`,
-            contentType: 'application/json',
-            beforeSend: function () {
-                $('#loadingBackground').fadeIn(600);
-            },
-            success: function (data) {
-                const tbody = $('#productsTableBody')[0];
-                tbody.innerHTML = Controller.buildTableRows(data);
-                $('#loadingBackground').fadeOut(600);
-            },
-            error: function (xhr) {
-                const err = eval("(" + xhr.responseText + ")");
-                showErrBlock(`${err.status}: ${err.message}`);
-                $('#loadingBackground').fadeOut(600);
-            }
-        })
-    },
-
-    createProduct: function () {
-        const product_name = $('#productName').val();
-        const product_count = $('#productCount').val();
-        const product_price = $('#productPrice').val();
-        const date = new Date($('#productDate').val());
-        const product_date = parseToValidDate(date);
-        const product = {
-            'product_name': product_name,
-            'count': product_count,
-            'price': product_price,
-            'delivery_date': product_date
+    createStock: function () {
+        const stock_name = $('#stockName').val();
+        const stock_address = $('#stockAddress').val();
+        const stock = {
+            'stock_name': stock_name,
+            'stock_address': stock_address,
         };
         $.ajax({
             type: 'POST',
             url: '/api/stock/add',
             contentType: 'application/json',
-            data: JSON.stringify(product),
+            data: JSON.stringify(stock),
             beforeSend: function () {
                 $('#loadingBackground').fadeIn(600);
             },
             success: function () {
-                $('#productName').val('');
-                $('#productCount').val('');
-                $('#productPrice').val('');
-                $('#productDate').val('');
-                Controller.getProducts();
+                $('#stockName').val('');
+                $('#stockAddress').val('');
+                Controller.getStocks();
             },
             error: function (xhr) {
                 const err = eval("(" + xhr.responseText + ")");
@@ -81,18 +35,16 @@ const Controller = {
         let rows = ``;
         for (let i = 0; i < data.length; i++) {
             rows += `<tr>
-                        <td>${data[i]['product_id']}</td>
-                        <td>${data[i]['product_name']}</td>
-                        <td>${data[i]['count']}</td>
-                        <td>${data[i]['price']} руб.</td>
-                        <td>${data[i]['delivery_date']}</td>
+                        <td><a href="/products?stock_id=${data[i]['stock_id']}">${data[i]['stock_id']}</a></td>
+                        <td>${data[i]['stock_name']}</td>
+                        <td>${data[i]['stock_address']}</td>
                     </tr>`
         }
         return rows;
     },
 
-    deleteProduct: function () {
-        const id = $('#deleteProductId');
+    deleteStock: function () {
+        const id = $('#deleteStockId');
         if (!Number.parseInt(id.val())) {
             console.log('???');
             id.val('');
@@ -107,7 +59,31 @@ const Controller = {
             },
             success: function () {
                 id.val('');
-                Controller.getProducts();
+                Controller.getStocks();
+            },
+            error: function (xhr) {
+                const err = eval("(" + xhr.responseText + ")");
+                showErrBlock(`${err.status}: ${err.message}`);
+                $('#loadingBackground').fadeOut(600);
+            }
+        })
+    },
+    getStocks: function () {
+        let sortType = $('#stockSortSelect').val();
+        if (typeof sortType != 'string')
+            sortType = 'none';
+        const sortInverse = $('#inverseSort').is(':checked');
+        $.ajax({
+            type: 'POST',
+            url: `/api/stock/all?sort=${sortType}&inverse=${sortInverse}`,
+            contentType: 'application/json',
+            beforeSend: function () {
+                $('#loadingBackground').fadeIn(600);
+            },
+            success: function (data) {
+                const tbody = $('#stockTableBody')[0];
+                tbody.innerHTML = Controller.buildTableRows(data);
+                $('#loadingBackground').fadeOut(600);
             },
             error: function (xhr) {
                 const err = eval("(" + xhr.responseText + ")");
@@ -116,5 +92,4 @@ const Controller = {
             }
         })
     }
-
 }

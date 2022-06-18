@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Практика</title>
@@ -9,46 +9,13 @@
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/stock/stock.js"></script>
     <script src="js/util.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body onload="Controller.init()">
 <div>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
-
-            <div class="container">
-                <a class="navbar-brand" href="#">Учёт</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Склад</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/invoice">Накладные</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/users">Пользователи</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/registration">Регистрация пользователей</a>
-                        </li>
-                    </ul>
-                    <form action="/logout">
-                        <button class="btn btn-outline-secondary my-2">Выйти из аккаунта</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <header th:insert="fragments/navbar.html :: navbar"></header>
     <div id="content">
-        <div id="errBlock" class="container text-center err-block mt-4">
-
-        </div>
-        <div id="loadingBackground" style="display: none"></div>
+        <div th:insert="fragments/blocks.html :: util"></div>
         <div class="container-fluid mt-4">
             <div class="container bg-light rounded shadow">
                 <div class="container p-3 text-center">
@@ -56,41 +23,27 @@
                         <table class="table d-inline table-borderless p-3">
                             <thead class="table-dark">
                             <tr>
-                                <th class="text-center">Добавление товара на склад</th>
+                                <th class="text-center">Создание нового склада</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
                                 <td>
                                     <label class="w-100">
-                                        <input class="form-control" placeholder="Наименование" id="productName">
+                                        <input class="form-control" placeholder="Наименование" id="stockName">
                                     </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label class="w-100">
-                                        <input class="form-control" placeholder="Количество" id="productCount">
+                                        <input class="form-control" placeholder="Адрес" id="stockAddress">
                                     </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <label class="w-100">
-                                        <input class="form-control" placeholder="Цена товара за шт." id="productPrice">
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="w-100">
-                                        <input type="datetime-local" class="form-control" id="productDate">
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="form-control" onclick="Controller.createProduct()">Сохранить</button>
+                                    <button class="form-control" onclick="Controller.createStock()">Сохранить</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -100,39 +53,20 @@
                         <table class="table d-inline table-borderless p-3">
                             <thead class="table-dark">
                             <tr>
-                                <th class="text-center">Удаление товара со склада</th>
+                                <th class="text-center">Удаление склада</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
                                 <td>
                                     <label class="w-100">
-                                        <input class="form-control text-center" placeholder="ID" id="deleteProductId">
+                                        <input class="form-control text-center" placeholder="ID" id="deleteStockId">
                                     </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <button class="form-control btn-dark" onclick="Controller.deleteProduct()">Удалить
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th class="table-dark">Пробить товары по дате</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="w-100">
-                                        <input class="form-control" type="date" id="productDateId">
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="form-control btn-dark" onclick="Controller.getProducts()">Пробить
+                                    <button class="form-control btn-dark" onclick="Controller.deleteStock()">Удалить
                                     </button>
                                 </td>
                             </tr>
@@ -150,13 +84,11 @@
                             <tr>
                                 <td>
                                     <label>
-                                        <select class="w-100 form-control form-select" id="productSortSelect">
+                                        <select class="w-100 form-control form-select" id="stockSortSelect">
                                             <option disabled selected value="none">Выберите способ сортировки</option>
                                             <option value="id">ID</option>
                                             <option value="name">Наименование</option>
-                                            <option value="count">Количество</option>
-                                            <option value="price">Цена</option>
-                                            <option value="date">Дата</option>
+                                            <option value="address">Адрес</option>
                                         </select>
                                     </label>
                                 </td>
@@ -171,77 +103,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <button class="form-control" onclick="Controller.getProducts()">Сортировать</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="container p-3 text-center">
-                    <div class="d-inline">
-                        <table class="table d-inline table-borderless">
-                            <thead class="table-dark">
-                            <tr class="text-center">
-                                <th>Наименование</th>
-                                <th>Количество</th>
-                                <th>Цена</th>
-                                <th>Дата</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <label>
-                                        <input class="form-control" placeholder="Название товара" id="productSearchName">
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input class="form-control" placeholder="Мин. количество" id="productSearchMinCount">
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input class="form-control" placeholder="Мин. цена" id="productSearchMinPrice">
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input class="form-control" type="datetime-local" placeholder="Мин. дата" id="productSearchMinDate">
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-start pt-0 ps-2">
-                                    <div>
-                                        <input class="form-check-input" type="checkbox" id="productSearchNameIgnoreCase">
-                                        <label for="productSearchNameIgnoreCase">Игнорировать регистр</label>
-                                    </div>
-                                    <div>
-                                        <input class="form-check-input" type="checkbox" id="productNameSearchStartsWith">
-                                        <label for="productNameSearchStartsWith">Начинается с...</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input class="form-control" placeholder="Макс. количество" id="productSearchMaxCount">
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input class="form-control" placeholder="Макс. цена" id="productSearchMaxPrice">
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input class="form-control" type="datetime-local" placeholder="Макс. дата" id="productSearchMaxDate">
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <button class="form-control" onclick="Controller.getProducts()">Поиск</button>
+                                    <button class="form-control" onclick="Controller.getStocks()">Сортировать</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -250,19 +112,17 @@
                 </div>
             </div>
             <div class="container-fluid mt-3">
-                <h3 class="text-center pt-2">Товары</h3>
+                <h3 class="text-center pt-2">Склады</h3>
                 <div class="container mt-4">
                     <table class="table table-hover table-bordered table-borderless">
                         <thead class="table-dark">
                         <tr class="text-center">
                             <th scope="col">ID</th>
                             <th scope="col">Наименование</th>
-                            <th scope="col">Количество</th>
-                            <th scope="col">Цена за шт.</th>
-                            <th scope="col">Дата поставки</th>
+                            <th scope="col">Адрес</th>
                         </tr>
                         </thead>
-                        <tbody id="productsTableBody" class="text-center">
+                        <tbody id="stockTableBody" class="text-center">
                         </tbody>
                     </table>
                 </div>
@@ -270,5 +130,6 @@
         </div>
     </div>
 </div>
+<footer th:insert="/fragments/blocks.html :: footer"></footer>
 </body>
 </html>

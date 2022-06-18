@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @AllArgsConstructor
 @Getter
-public enum InvoiceType {
-
-    BILLING("Выдача"),
-    REFUND("Возврат");
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum InvoiceDirection {
+    REALIZATION("Реализация"),
+    SELLING("Продажа");
 
     private final String localed;
 }

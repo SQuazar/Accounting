@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<header>
+    <nav th:fragment="navbar" class="navbar navbar-expand-sm navbar-light bg-light">
+
+        <div class="container">
+            <a class="navbar-brand" href="/">Учёт</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stock">
+                            <i class="material-symbols-outlined" style="vertical-align: top;">inventory_2</i>
+                            <span style="vertical-align: top">Склады</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">
+                            <i class="material-symbols-outlined" style="vertical-align: top;">inventory</i>
+                            <span style="vertical-align: top">Продукты</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/invoice">
+                            <i class="material-symbols-outlined" style="vertical-align: top;">receipt</i>
+                            <span style="vertical-align: top">Накладные</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/users">
+                            <i class="material-symbols-outlined" style="vertical-align: top;">group</i>
+                            <span style="vertical-align: top">Пользователи</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/registration">
+                            <i class="material-symbols-outlined" style="vertical-align: top;">group_add</i>
+                            <span style="vertical-align: top">Регистрация пользователей</span>
+                        </a>
+                    </li>
+                </ul>
+                <form action="/logout">
+                    <button class="btn btn-outline-secondary my-2">Выйти из аккаунта</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+</body>
+</html>

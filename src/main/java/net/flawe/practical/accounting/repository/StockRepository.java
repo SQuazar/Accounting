@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Integer>, JpaSpecificationExecutor<Stock> {
-    @Query(value = "select * from stock where DATE(delivery_date) = :date", nativeQuery = true)
+/*    @Query(value = "select * from stock where DATE(delivery_date) = :date", nativeQuery = true)
     List<Stock> findByDeliveryDate(LocalDate date);
 
     @Query("""
@@ -25,6 +25,6 @@ public interface StockRepository extends JpaRepository<Stock, Integer>, JpaSpeci
     List<Stock> findByDeliveryDate(LocalDate date, Sort sort);
 
     @Query("select stock from Stock stock where stock.count > 0")
-    List<Stock> findAllAvailable();
+    List<Stock> findAllAvailable();*/
 
 }

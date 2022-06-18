@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<div th:fragment="util">
+    <div id="errBlock" class="container text-center err-block mt-4"></div>
+    <div id="loadingBackground" style="display: none"></div>
+</div>
+<div th:fragment="footer">
+    <div class="container mb-3">
+        <div class="copyright">
+            <span th:text="'© ' + ${@environment.getProperty('copyright.domain')}"></span>
+            <a target="_blank" th:href="${@environment.getProperty('copyright.vk')}">
+                <img src="https://pngicon.ru/file/uploads/vk-256x256.png" width="32px" height="32px" alt="Моя страница ВКонтакте">
+            </a>
+            <a target="_blank" th:href="${@environment.getProperty('copyright.instagram')}">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/2048px-Instagram_icon.png" width="32px" height="32px" alt="Мой Telegram">
+            </a>
+            <a target="_blank" th:href="${@environment.getProperty('copyright.telegram')}">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" width="32px" height="32px" alt="Мой Instagram">
+            </a>
+            <a target="_blank" th:href="${@environment.getProperty('copyright.github')}">
+                <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="32px" height="32" alt="Мой GitHub">
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

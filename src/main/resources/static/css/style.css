@@ -25,3 +25,40 @@
     box-shadow: 0 0 12px 1px rgb(255, 255, 255);
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 }
+
+.edit-button {
+    scroll-behavior: smooth;
+    fill: orange;
+    cursor: pointer;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+            'FILL' 0,
+            'wght' 300,
+            'GRAD' 0,
+            'opsz' 20
+}
+
+footer .copyright {
+    width: 650px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+footer .copyright span {
+    font-size: 15px;
+    color: #2e322f;
+    font-weight: bold;
+    display: block;
+    padding: 95px 0 0;
+    margin: 0 0 20px;
+}
+
+footer * {
+    transition: all, .5s, ease;
+}
+
+footer a {
+    display: inline-block;
+}
